@@ -10,6 +10,8 @@
 
 <'
 
+import scoreboard;
+
 unit driver_u {
 
    clk_p : inout simple_port of bit is instance; // can be driven or read by sn
@@ -68,6 +70,8 @@ unit driver_u {
 
    instructions_to_drive : list of instruction_s;
 
+   scoreboard : scoreboard_u is instance;
+
 
    event clk is fall(clk_p$)@sim;
    event resp1 is change(out_resp1_p$)@sim;
@@ -103,6 +107,7 @@ unit driver_u {
       case ins.port {
       1: {
         // drive data into calculator port 1
+        scoreboard.add_to_queue(1);
         req1_cmd_in_p$  = pack(NULL, ins.cmd_in);
         req1_data_in_p$ = pack(NULL, ins.din1);
         wait cycle;
@@ -112,6 +117,7 @@ unit driver_u {
 
       2: {
         // drive data into calculator port 1
+        scoreboard.add_to_queue(2);
         req2_cmd_in_p$  = pack(NULL, ins.cmd_in);
         req2_data_in_p$ = pack(NULL, ins.din1);
         wait cycle;
@@ -121,6 +127,7 @@ unit driver_u {
 
       3: {
         // drive data into calculator port 1
+        scoreboard.add_to_queue(3);
         req3_cmd_in_p$  = pack(NULL, ins.cmd_in);
         req3_data_in_p$ = pack(NULL, ins.din1);
         wait cycle;
@@ -130,6 +137,7 @@ unit driver_u {
 
       4: {
         // drive data into calculator port 1
+        scoreboard.add_to_queue(4);
         req4_cmd_in_p$  = pack(NULL, ins.cmd_in);
         req4_data_in_p$ = pack(NULL, ins.din1);
         wait cycle;
@@ -137,8 +145,6 @@ unit driver_u {
         req4_data_in_p$ = pack(NULL, ins.din2);
       };
     };
-
-
    }; // drive_instruction
 
 
@@ -191,6 +197,7 @@ unit driver_u {
          drive_instruction(ins, index);
          collect_response(ins);
          ins.check_response(ins);
+         scoreboard.check_queue(ins.port);
          drive_reset();
          update_instuction_wires(ins);
          ins.check_reset(ins);

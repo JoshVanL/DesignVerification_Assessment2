@@ -6,8 +6,6 @@
 
 <'
 
-//import driver;
-
 type opcode_t : [ NOP, ADD, SUB, INV, INV1, SHL, SHR ] (bits:4);
 
 struct instruction_s {
@@ -19,7 +17,6 @@ struct instruction_s {
 
     !resp   : uint (bits:2);
     !dout   : uint (bits:32);
-    //!port_o : uint (bits:3); //
 
     out_resp1_p : uint (bits:2);
     out_resp2_p : uint (bits:2);
@@ -79,6 +76,81 @@ struct instruction_s {
 
 
 }; // struct instruction_s
+
+struct instruction_p {
+
+    %cmd_in1 : opcode_t;
+    %cmd_in2 : opcode_t;
+    %cmd_in3 : opcode_t;
+    %cmd_in4 : opcode_t;
+
+    %data1_in1 : uint (bits:32);
+    %data1_in2 : uint (bits:32);
+    %data1_in3 : uint (bits:32);
+    %data1_in4 : uint (bits:32);
+    %data2_in1 : uint (bits:32);
+    %data2_in2 : uint (bits:32);
+    %data2_in3 : uint (bits:32);
+    %data2_in4 : uint (bits:32);
+
+    !out_resp1 : uint (bits:2);
+    !out_resp2 : uint (bits:2);
+    !out_resp3 : uint (bits:2);
+    !out_resp4 : uint (bits:2);
+
+    !out_data1 : uint (bits:32);
+    !out_data2 : uint (bits:32);
+    !out_data3 : uint (bits:32);
+    !out_data4 : uint (bits:32);
+
+    check_response(ins : instruction_s) is empty;
+
+    check_reset(ins : instruction_s) is {
+        check that ins.out_resp1_p == 0 else
+            dut_error(appendf("[R==>Port 1 - none zero on resp out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_resp1_p));
+        check that ins.out_resp2_p == 0 else
+            dut_error(appendf("[R==>Port 2 - none zero on resp out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_resp2_p));
+        check that ins.out_resp3_p == 0 else
+            dut_error(appendf("[R==>Port 3 - none zero on resp out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_resp3_p));
+        check that ins.out_resp4_p == 0 else
+            dut_error(appendf("[R==>Port 4 - none zero on resp out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_resp4_p));
+        check that ins.out_data1_p == 0 else
+            dut_error(appendf("[R==>Port 1 - none zero on data out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_data1_p));
+        check that ins.out_data2_p == 0 else
+            dut_error(appendf("[R==>Port 2 - none zero on data out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_data2_p));
+        check that ins.out_resp3_p == 0 else
+            dut_error(appendf("[R==>Port 3 - none zero on data out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_data3_p));
+        check that ins.out_data3_p == 0 else
+            dut_error(appendf("[R==>Port 4 - none zero on data out.<==R]\n \
+                        expected 00,\n \
+                        received %d,\n",
+                        ins.out_data4_p));
+    };
+
+
+}; // struct instruction_p
+
 
 
 extend instruction_s {
@@ -221,6 +293,4 @@ extend instruction_s {
 
 }; // extend instruction_s
 
-
 '>
-
