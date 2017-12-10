@@ -146,28 +146,40 @@ unit driver_u {
 
       case ins.port {
       1: {
-        wait @resp1; -- wait for the response
+        wait @resp1 or [10] * cycle;
         ins.resp = out_resp1_p$;
         ins.dout = out_data1_p$;
       };
       2: {
-        wait @resp2; -- wait for the response
+        wait @resp2 or [10] * cycle;
         ins.resp = out_resp2_p$;
         ins.dout = out_data2_p$;
       };
       3: {
-        wait @resp3; -- wait for the response
+        wait @resp3 or [10] * cycle;
         ins.resp = out_resp3_p$;
         ins.dout = out_data3_p$;
       };
       4: {
-        wait @resp4; -- wait for the response
+        wait @resp4 or [10] * cycle;
         ins.resp = out_resp4_p$;
         ins.dout = out_data4_p$;
         };
       };
 
    }; // collect_response
+
+  update_instuction_wires(ins : instruction_s) @clk is {
+    ins.out_resp1_p = out_resp1_p$;
+    ins.out_resp2_p = out_resp2_p$;
+    ins.out_resp3_p = out_resp3_p$;
+    ins.out_resp4_p = out_resp4_p$;
+
+    ins.out_data1_p = out_data1_p$;
+    ins.out_data2_p = out_data2_p$;
+    ins.out_data3_p = out_data3_p$;
+    ins.out_data4_p = out_data4_p$;
+  };
 
 
    drive() @clk is {
@@ -179,6 +191,9 @@ unit driver_u {
          drive_instruction(ins, index);
          collect_response(ins);
          ins.check_response(ins);
+         drive_reset();
+         update_instuction_wires(ins);
+         ins.check_reset(ins);
          wait cycle;
 
       }; // for each instruction
