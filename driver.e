@@ -83,12 +83,12 @@ unit driver_u {
    drive_reset() @clk is {
       var i : int;
 
-      //for { i=0; i<=8; i+=1 } do {
+      for { i=0; i<=8; i+=1 } do {
 
          reset_p$ = 1111111;
          wait cycle;
 
-      //}; // for
+      }; // for
 
       reset_p$ = 0000000;
 
@@ -99,7 +99,7 @@ unit driver_u {
        var exp_resp : expected_resp = new;
 
        //exp_resp.val  = ins.get_exp_data(ins);
-       exp_resp.key_port = ins.port;
+       exp_resp.port = ins.port;
 
        new_entry.size = 1;
        new_entry.entry.add(exp_resp);
@@ -114,11 +114,10 @@ unit driver_u {
        var exp_resp3 : expected_resp = new;
        var exp_resp4 : expected_resp = new;
 
-       //exp_resp.val  = ins.get_exp_data(ins);
-       exp_resp1.key_port = ins1.port;
-       exp_resp2.key_port = ins2.port;
-       exp_resp3.key_port = ins3.port;
-       exp_resp4.key_port = ins4.port;
+       exp_resp1.port = ins1.port;
+       exp_resp2.port = ins2.port;
+       exp_resp3.port = ins3.port;
+       exp_resp4.port = ins4.port;
 
        new_entry.size = 4;
        new_entry.entry.add(exp_resp1);
@@ -326,7 +325,7 @@ unit driver_u {
 
          drive_instruction(ins, index);
          collect_response(ins);
-         //ins.check_response(ins);
+         ins.check_response(ins);
          //scrboard.seen_a_resp(scrboard, ins.port);
          drive_reset();
          update_instuction_wires(ins);
@@ -335,47 +334,47 @@ unit driver_u {
 
       }; // for each instruction
 
-      //start wait_port1();
-      //start wait_port2();
-      //start wait_port3();
-      //start wait_port4();
+      start wait_port1();
+      start wait_port2();
+      start wait_port3();
+      start wait_port4();
 
 
-      //for i from 0 to 1000 {
-      //  scrboard.clean(scrboard);
+      for i from 0 to 1000 {
+        scrboard.clean(scrboard);
 
-      //  ins1 = instructions_to_drive.pop();
-      //  ins2 = instructions_to_drive.pop();
-      //  ins3 = instructions_to_drive.pop();
-      //  ins4 = instructions_to_drive.pop();
+        ins1 = instructions_to_drive.pop();
+        ins2 = instructions_to_drive.pop();
+        ins3 = instructions_to_drive.pop();
+        ins4 = instructions_to_drive.pop();
 
-      //  ins1.port = 1;
-      //  ins2.port = 2;
-      //  ins3.port = 3;
-      //  ins4.port = 4;
+        ins1.port = 1;
+        ins2.port = 2;
+        ins3.port = 3;
+        ins4.port = 4;
 
-      //  ins1.cmd_in = ADD;
-      //  ins2.cmd_in = ADD;
-      //  ins3.cmd_in = ADD;
-      //  ins4.cmd_in = ADD;
-      //  drive4_instructions(ins1, ins2, ins3, ins4, i);
+        ins1.cmd_in = ADD;
+        ins2.cmd_in = ADD;
+        ins3.cmd_in = ADD;
+        ins4.cmd_in = ADD;
+        drive4_instructions(ins1, ins2, ins3, ins4, i);
 
-      //  wait cycle;
+        wait cycle;
 
-      //  ins1.cmd_in = SHR;
-      //  ins2.cmd_in = SHR;
-      //  ins3.cmd_in = SHR;
-      //  ins4.cmd_in = SHR;
-      //  drive4_instructions(ins1, ins2, ins3, ins4, i);
+        ins1.cmd_in = SHR;
+        ins2.cmd_in = SHR;
+        ins3.cmd_in = SHR;
+        ins4.cmd_in = SHR;
+        drive4_instructions(ins1, ins2, ins3, ins4, i);
 
-      //  wait [10] * cycle;
+        wait [10] * cycle;
 
-      //  drive_reset();
-      //  update_instuction_wires(ins1);
-      //  ins1.check_reset(ins1);
+        drive_reset();
+        update_instuction_wires(ins1);
+        ins1.check_reset(ins1);
 
-      //  wait cycle;
-      //};
+        wait cycle;
+      };
 
       wait [10] * cycle;
       stop_run();

@@ -1,0 +1,39 @@
+\documentclass[a4paper]{article}
+    \title{\vspace{-0.7em}COMS31700: Design Verification - Calculator Design; Bug Report\vspace{-0.7em}}
+    \author{Joshua Van Leeuwen - jv15626 - 23305}
+\date{}
+
+\usepackage{titlesec}
+\usepackage[margin=0.5in]{geometry}
+\geometry{top=10mm, bottom=20mm}
+
+
+\usepackage{titling}
+\usepackage{array}
+\usepackage{listings}
+
+\setlength{\droptitle}{-5em}
+
+\begin{document}
+\vspace{-10em}
+\maketitle
+
+\vspace{-5.1em}
+\begin{enumerate}
+    \item The port out\_data2 outputs 0 for any input.
+    \item Port 4 does not respond to input - no output for out\_resp4 or out\_data4.
+    \item Underflow for subtraction responds with a 2 instead of 1 response code.
+    \item Overflow for addition responds with a 2 instead of 1 response code.
+    \item Invalid commands respond with response code 2 instead of 1.
+    \item Invalid commands respond with response code 2 instead of 1.
+    \item Right or left shift by 0 will output 0 as data.
+    \item Addition outputs 16 less if a 1 in the 5th position but not 6th.
+    \item Addition outputs 16 more if a 1 in the 6th position but not 5th.
+    \item A right shift by 1 will result in no operation.
+    \item Under left shift, a bit in the 5th position outputs wrong data. It will cause the output data to be more than correct answer by 2 to the power of the sum of the input data modules 32. Bits above the 5th will cause the output to be that number multiplied by 458753 more than it should.
+    \item Right shift on port 1 with an operator of bits below and above the 5th will only shift by the number modules 32.
+    \item Priority
+    \item Reset does not clear the output data of the ports.
+\end{enumerate}
+\end{document}
+
