@@ -12,7 +12,7 @@ extend instruction_s {
 
    cover instruction_complete is {
       item cmd_in;
-      item resp;
+      item resp;// using per_instance, ignore = (resp == 3);
       cross cmd_in, resp;
    }
 

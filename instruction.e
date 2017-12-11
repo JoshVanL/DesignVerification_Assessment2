@@ -6,7 +6,7 @@
 
 <'
 
-type opcode_t : [ NOP, ADD, SUB, INV, INV1, SHL, SHR ] (bits:4);
+type opcode_t : [ NOP, ADD, SUB, INV1, INV2, SHL, SHR, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11] (bits:4);
 
 struct instruction_s {
 
@@ -28,47 +28,50 @@ struct instruction_s {
     out_data3_p : uint (bits:32);
     out_data4_p : uint (bits:32);
 
+
     check_response(ins : instruction_s) is empty;
+
+    get_exp_data(ins : instruction_s): uint(bits:32) is empty;
 
 
     check_reset(ins : instruction_s) is {
         check that ins.out_resp1_p == 0 else
-            dut_error(appendf("[R==>Port 1 - none zero on resp out.<==R]\n \
+            dut_error(appendf("[R==>Port 1 - none zero on resp out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_resp1_p));
         check that ins.out_resp2_p == 0 else
-            dut_error(appendf("[R==>Port 2 - none zero on resp out.<==R]\n \
+            dut_error(appendf("[R==>Port 2 - none zero on resp out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_resp2_p));
         check that ins.out_resp3_p == 0 else
-            dut_error(appendf("[R==>Port 3 - none zero on resp out.<==R]\n \
+            dut_error(appendf("[R==>Port 3 - none zero on resp out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_resp3_p));
         check that ins.out_resp4_p == 0 else
-            dut_error(appendf("[R==>Port 4 - none zero on resp out.<==R]\n \
+            dut_error(appendf("[R==>Port 4 - none zero on resp out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_resp4_p));
         check that ins.out_data1_p == 0 else
-            dut_error(appendf("[R==>Port 1 - none zero on data out.<==R]\n \
+            dut_error(appendf("[R==>Port 1 - none zero on data out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_data1_p));
         check that ins.out_data2_p == 0 else
-            dut_error(appendf("[R==>Port 2 - none zero on data out.<==R]\n \
+            dut_error(appendf("[R==>Port 2 - none zero on data out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_data2_p));
-        check that ins.out_resp3_p == 0 else
-            dut_error(appendf("[R==>Port 3 - none zero on data out.<==R]\n \
+        check that ins.out_data3_p == 0 else
+            dut_error(appendf("[R==>Port 3 - none zero on data out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_data3_p));
         check that ins.out_data3_p == 0 else
-            dut_error(appendf("[R==>Port 4 - none zero on data out.<==R]\n \
+            dut_error(appendf("[R==>Port 4 - none zero on data out. (RESET)<==R]\n \
                         expected 00,\n \
                         received %d,\n",
                         ins.out_data4_p));
@@ -77,223 +80,131 @@ struct instruction_s {
 
 }; // struct instruction_s
 
-struct instruction_p {
-
-    %cmd_in1 : opcode_t;
-    %cmd_in2 : opcode_t;
-    %cmd_in3 : opcode_t;
-    %cmd_in4 : opcode_t;
-
-    %data1_in1 : uint (bits:32);
-    %data1_in2 : uint (bits:32);
-    %data1_in3 : uint (bits:32);
-    %data1_in4 : uint (bits:32);
-    %data2_in1 : uint (bits:32);
-    %data2_in2 : uint (bits:32);
-    %data2_in3 : uint (bits:32);
-    %data2_in4 : uint (bits:32);
-
-    !out_resp1 : uint (bits:2);
-    !out_resp2 : uint (bits:2);
-    !out_resp3 : uint (bits:2);
-    !out_resp4 : uint (bits:2);
-
-    !out_data1 : uint (bits:32);
-    !out_data2 : uint (bits:32);
-    !out_data3 : uint (bits:32);
-    !out_data4 : uint (bits:32);
-
-    check_response(ins : instruction_s) is empty;
-
-    check_reset(ins : instruction_s) is {
-        check that ins.out_resp1_p == 0 else
-            dut_error(appendf("[R==>Port 1 - none zero on resp out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_resp1_p));
-        check that ins.out_resp2_p == 0 else
-            dut_error(appendf("[R==>Port 2 - none zero on resp out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_resp2_p));
-        check that ins.out_resp3_p == 0 else
-            dut_error(appendf("[R==>Port 3 - none zero on resp out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_resp3_p));
-        check that ins.out_resp4_p == 0 else
-            dut_error(appendf("[R==>Port 4 - none zero on resp out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_resp4_p));
-        check that ins.out_data1_p == 0 else
-            dut_error(appendf("[R==>Port 1 - none zero on data out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_data1_p));
-        check that ins.out_data2_p == 0 else
-            dut_error(appendf("[R==>Port 2 - none zero on data out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_data2_p));
-        check that ins.out_resp3_p == 0 else
-            dut_error(appendf("[R==>Port 3 - none zero on data out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_data3_p));
-        check that ins.out_data3_p == 0 else
-            dut_error(appendf("[R==>Port 4 - none zero on data out after reset.<==R]\n \
-                        expected 00,\n \
-                        received %d,\n",
-                        ins.out_data4_p));
-    };
-
-
-}; // struct instruction_p
-
 
 
 extend instruction_s {
 
-   // example check for correct addition
-   when ADD'cmd_in instruction_s {
-
     check_response(ins : instruction_s) is only {
-       var expresp : uint (bits:2) = 1;
-       var res     : uint (bits:128) = ins.din1 + ins.din2;
-       if (res > 4294967296) {
-            expresp = 2;
+        // example check for correct addition
+        if (ins.cmd_in == ADD) {
+            var expresp : uint (bits:2) = 1;
+            var res     : uint (bits:128) = ins.din1 + ins.din2;
+            if (res > 4294967296) {
+                expresp = 2;
+            };
+
+            check that ins.resp == expresp else
+                dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
+                            expected %u,\n \
+                            received %u,\n",
+                            ins.port, expresp, ins.resp));
+
+            check that ins.dout == (ins.din1 + ins.din2) else
+                dut_error(appendf("[R==>Port %u - Invalid output data.<==R]\n \
+                            Instruction %s %u %u,\n \
+                            expected %032.32b \t %u,\n \
+                            received %032.32b \t %u.\n",
+                            ins.port,
+                            ins.cmd_in, ins.din1, ins.din2,
+                            (ins.din1 + ins.din2), (ins.din1 + ins.din2),
+                            ins.dout,ins.dout));
+
+        } else if (ins.cmd_in == SUB) {
+
+            var expresp : uint (bits:2) = 1;
+            var res     : int (bits:128) = ins.din1 - ins.din2;
+            if (res < 0) {
+                expresp = 2;
+            };
+
+            check that ins.resp == expresp else
+                dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
+                            expected %u,\n \
+                            received %u,\n",
+                            ins.port, expresp, ins.resp));
+
+            check that ins.dout == (ins.din1 - ins.din2) else
+                dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
+                            Instruction %s %u %u,\n \
+                            expected %032.32b \t %u,\n \
+                            received %032.32b \t %u.\n",
+                            ins.cmd_in, ins.din1, ins.din2,
+                            (ins.din1 - ins.din2), (ins.din1 - ins.din2),
+                            ins.dout,ins.dout));
+
+        } else if (ins.cmd_in in [INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]) {
+
+            check that ins.resp == 02 else
+                dut_error(appendf("[R==>port %u - invalid responce code.<==r]\n \
+                            expected 02,\n \
+                            received %u,\n",
+                            ins.port, ins.resp));
+            check that ins.dout == 0 else
+                dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
+                            Instruction %s %u %u,\n \
+                            expected 0,\n \
+                            received %032.32b \t %u.\n",
+                            ins.cmd_in, ins.din1, ins.din2,
+                            ins.dout,ins.dout));
+
+        } else if (ins.cmd_in == SHL) {
+
+            check that ins.resp == 01 else
+                dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
+                            expected 01,\n \
+                            received %u,\n",
+                            ins.port, ins.resp));
+            check that ins.dout == (ins.din1 << ins.din2) else
+                dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
+                            Instruction %s %u %u,\n \
+                            expected %032.32b \t %u,\n \
+                            received %032.32b \t %u.\n",
+                            ins.cmd_in, ins.din1, ins.din2,
+                            (ins.din1 << ins.din2), (ins.din1 << ins.din2),
+                            ins.dout,ins.dout));
+
+        } else if (ins.cmd_in == SHR) {
+
+            check that ins.resp == 01 else
+                dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
+                            expected 01,\n \
+                            received %u,\n",
+                            ins.port, ins.resp));
+            check that ins.dout == (ins.din1 >> ins.din2) else
+                dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
+                            Instruction %s %u %u,\n \
+                            expected %032.32b \t %u,\n \
+                            received %032.32b \t %u.\n",
+                            ins.cmd_in, ins.din1, ins.din2,
+                            (ins.din1 >> ins.din2), (ins.din1 >> ins.din2),
+                            ins.dout,ins.dout));
+
         };
-
-       check that ins.resp == expresp else
-       dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
-                          expected %u,\n \
-                          received %u,\n",
-                          ins.port, expresp, ins.resp));
-
-       check that ins.dout == (ins.din1 + ins.din2) else
-       dut_error(appendf("[R==>Port %u - Invalid output data.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected %032.32b \t %u,\n \
-                          received %032.32b \t %u.\n",
-                          ins.port,
-                          ins.cmd_in, ins.din1, ins.din2,
-                          (ins.din1 + ins.din2), (ins.din1 + ins.din2),
-                          ins.dout,ins.dout));
-
-     }; // check_response
     };
 
-   when SUB'cmd_in instruction_s {
 
-    check_response(ins : instruction_s) is only {
-       var expresp : uint (bits:2) = 1;
-       var res     : int (bits:128) = ins.din1 - ins.din2;
-       if (res < 0) {
-            expresp = 2;
+    get_exp_data(ins : instruction_s):uint(bits:32) is only {
+        if (ins.cmd_in == ADD) {
+            return ins.din1 + ins.din2;
+
+        } else if (ins.cmd_in == SUB) {
+            var res     : int (bits:128) = ins.din1 - ins.din2;
+            if (res < 0) {
+                return 0;
+            };
+
+            return res;
+
+        } else if (ins.cmd_in in [INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]) {
+            return 0;
+
+        } else if (ins.cmd_in == SHL) {
+            return ins.din1 << ins.din2;
+
+        } else if (ins.cmd_in == SHR) {
+            return ins.din1 >> ins.din2;
         };
-
-       check that ins.resp == expresp else
-       dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
-                          expected %u,\n \
-                          received %u,\n",
-                          ins.port, expresp, ins.resp));
-
-       check that ins.dout == (ins.din1 - ins.din2) else
-       dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected %032.32b \t %u,\n \
-                          received %032.32b \t %u.\n",
-                          ins.cmd_in, ins.din1, ins.din2,
-                          (ins.din1 - ins.din2), (ins.din1 - ins.din2),
-                          ins.dout,ins.dout));
-
-     }; // check_response
     };
-
-   when INV'cmd_in instruction_s {
-
-     check_response(ins : instruction_s) is only {
-
-       check that ins.resp == 02 else
-       dut_error(appendf("[R==>port %u - invalid responce code.<==r]\n \
-                          expected 02,\n \
-                          received %u,\n",
-                          ins.port, ins.resp));
-       check that ins.dout == 0 else
-       dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected 0,\n \
-                          received %032.32b \t %u.\n",
-                          ins.cmd_in, ins.din1, ins.din2,
-                          ins.dout,ins.dout));
-
-     }; // check_response
-    };
-
-
-   when INV1'cmd_in instruction_s {
-
-     check_response(ins : instruction_s) is only {
-
-       check that ins.resp == 02 else
-       dut_error(appendf("[R==>port %u - invalid responce code.<==R]\n \
-                          expected 02,\n \
-                          received %u,\n",
-                          ins.port, ins.resp));
-       check that ins.dout == 0 else
-       dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected 0,\n \
-                          received %032.32b \t %u.\n",
-                          ins.cmd_in, ins.din1, ins.din2,
-                          ins.dout,ins.dout));
-
-     }; // check_response
-    };
-
-   when SHL'cmd_in instruction_s {
-
-     check_response(ins : instruction_s) is only {
-
-       check that ins.resp == 01 else
-       dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
-                          expected 01,\n \
-                          received %u,\n",
-                          ins.port, ins.resp));
-       check that ins.dout == (ins.din1 << ins.din2) else
-       dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected %032.32b \t %u,\n \
-                          received %032.32b \t %u.\n",
-                          ins.cmd_in, ins.din1, ins.din2,
-                          (ins.din1 << ins.din2), (ins.din1 << ins.din2),
-                          ins.dout,ins.dout));
-
-     }; // check_response
-    };
-
-   when SHR'cmd_in instruction_s {
-
-     check_response(ins : instruction_s) is only {
-
-       check that ins.resp == 01 else
-       dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
-                          expected 01,\n \
-                          received %u,\n",
-                          ins.port, ins.resp));
-       check that ins.dout == (ins.din1 >> ins.din2) else
-       dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
-                          Instruction %s %u %u,\n \
-                          expected %032.32b \t %u,\n \
-                          received %032.32b \t %u.\n",
-                          ins.cmd_in, ins.din1, ins.din2,
-                          (ins.din1 >> ins.din2), (ins.din1 >> ins.din2),
-                          ins.dout,ins.dout));
-
-     }; // check_response
-    };
-
-}; // extend instruction_s
+};
 
 '>

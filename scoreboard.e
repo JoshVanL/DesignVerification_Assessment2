@@ -7,103 +7,79 @@
 
 struct expected_resp {
     key_port : uint(bits:3);
-    val      : uint(bits:32);
+    //val      : uint(bits:32);
 };
 
 struct queue_entry {
-    key : int;
+    qIndex  : int;
+    size : int;
 
     entry : list(key: key_port) of expected_resp;
 };
 
-struct scoreboard_u {
+unit scoreboard_u {
 
-  !queue: list(key: key) of queue_entry;
-
-   //queue1 : list of uint(bits:32);
-   //queue2 : list of uint(bits:32);
-   //queue3 : list of uint(bits:32);
-   //queue4 : list of uint(bits:32);
-
-    //new_expected_resp(key_port : uint(bits:3), val : uint(bits:32)) : return expected_resp is {
-    //    var exp_resp : expected_resp = new;
-    //    exp_resp.key_port = key_port;
-    //    exp_resp.val = val;
-    //    result = exp_resp;
-    //};
+    !queue: list(key: qIndex) of queue_entry;
 
     queue_last : int;
     queue_curr : int;
 
-    add_new_entry(entry: queue_entry) is {
-        entry.key = queue_last;
-        queue.add(entry);
-        queue_last += 1;
+    add_new_entry(scr: scoreboard_u, entry: queue_entry) is {
+        entry.qIndex = scr.queue_last;
+        scr.queue.add(entry);
+        scr.queue_last += 1;
     };
 
-    remove_expected_res(entry_key: int, key_port: uint(bits:3)) is {
-        queue.key(entry_key).entry.delete(key_port)
+    remove_expected_res(scr: scoreboard_u, entry_key: int, key_port: uint(bits:3)) is {
+        //for each (ent) in scr.queue.key(scr.queue_curr).entry {
+        //    outf("============= %d ==========\n", ent.key_port);
+        //};
+        //outf("\n");
+        //outf("Deleted %d from queue\n", key_port);
+
+        scr.queue.key(entry_key).entry.delete(scr.queue.key(entry_key).entry.key_index(key_port));
+        scr.queue.key(entry_key).size -= 1;
+        if (scr.queue.key(entry_key).size == 0) {
+            scr.queue.delete(scr.queue.key_index(entry_key));
+            scr.queue_curr += 1;
+        };
+        //queue.key(entry_key).entry.resize(queue.key(entry_key).size);
     };
 
-    seen_a_resp(port: uint(bits:3), val: uint(bits:32)) is {
-        var entry : queue_entry = queue.key(queue_curr);
-        if (!entry.entry.key_exists(queue_curr)) {
-            dut_error(appendf("[R==>Unexpected port response %u in scoreboard.<==R]\n \
+    seen_a_resp(scr: scoreboard_u, port: uint(bits:3)) is {
+
+        if (!scr.queue.key(scr.queue_curr).entry.key_exists(port)) {
+            dut_error(appendf("[R==>SCOREBOARD: Unexpected port response %u.<==R]\n \
                                Bad priority, FIFO?\n",
-                               queue_curr));
-        } else if (entry.entry.key(queue_curr).val != val) {
-            dut_error(appendf("[R==>Unexpected value response from port %u in scoreboard.<==R]\n \
-                               expected: %u \n \
-                               received: %u \n ",
-                               queue_curr, entry.entry.key(queue_curr).val, val));
+                               port));
+            outf("Current entry contains: \n");
+            for each (ent) in scr.queue.key(scr.queue_curr).entry {
+                outf("%d,", ent.key_port);
+            };
+            outf("\n");
+
+        //} else if (entry.entry.key(port).val != val) {
+        //    dut_error(appendf("[R==>SCOREBOARD: Unexpected value response from port %u.<==R]\n \
+        //                       expected: %u \n \
+        //                       received: %u \n ",
+        //                       scr.queue_curr, entry.entry.key(scr.queue_curr).val, val));
+
         } else {
-            remove_expected_res(queue_curr, port);
+            remove_expected_res(scr, scr.queue_curr, port);
         };
     };
-    //=============================================
-    // test if entry is empty and so increase curr ++
-    // ===============================================
 
-    // adding an entry
-    //var s : array_entry = new;
-    //s.key = "foo";
-    //s.val = 0xdead_beef;
-    //assoc_array.add(s);
+    init_scoreboard(scr: scoreboard_u) is {
+        scr.queue_last = 1;
+        scr.queue_curr = 1;
+    };
 
-    // check if an entry exists
-    //print assoc_array.key_exists("bar");
+    clean(scr: scoreboard_u) is {
+        scr.queue_last = 1;
+        scr.queue_curr = 1;
+        scr.queue.clear();
+    };
 
-    // get an entry
-    //if assoc_array.key_exists("foo") {
-    //  print assoc_array.key("foo").val using hex;
-    //};
-
-   //add_to_queue(queueN : int, num : uint(bits:32)) is {
-   //   case queueN {
-   //     1: {
-   //         queue1.add(num);
-   //     };
-   //     2: {
-   //         queue2.add(num);
-   //     };
-   //     3: {
-   //         queue3.add(num);
-   //     };
-   //     4: {
-   //         queue4.add(num);
-   //     };
-   //   };
-   //};
-
-   //check_queue(i : int) is {
-   //    outport = queue.pop0();
-   //    if outport != i {
-   //        dut_error(appendf("[R==>Unexpected priority<==R]\n \
-   //                    expected port %d,\n \
-   //                    received port %d,\n",
-   //                    i, outport));
-   //    };
-   //}
 };
 
 '>

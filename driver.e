@@ -70,7 +70,7 @@ unit driver_u {
 
    instructions_to_drive : list of instruction_s;
 
-   //scoreboard : scoreboard_u is instance;
+   scrboard : scoreboard_u is instance;
 
 
    event clk is fall(clk_p$)@sim;
@@ -83,19 +83,55 @@ unit driver_u {
    drive_reset() @clk is {
       var i : int;
 
-      for { i=0; i<=8; i+=1 } do {
+      //for { i=0; i<=8; i+=1 } do {
 
          reset_p$ = 1111111;
          wait cycle;
 
-      }; // for
+      //}; // for
 
       reset_p$ = 0000000;
 
    }; // drive_reset
 
+   new_queue_entry(ins : instruction_s) is {
+       var new_entry : queue_entry = new;
+       var exp_resp : expected_resp = new;
+
+       //exp_resp.val  = ins.get_exp_data(ins);
+       exp_resp.key_port = ins.port;
+
+       new_entry.size = 1;
+       new_entry.entry.add(exp_resp);
+       scrboard.add_new_entry(scrboard, new_entry);
+   };
+
+   new_queue_entry4(ins1 : instruction_s, ins2 : instruction_s, ins3 : instruction_s, ins4 : instruction_s) is {
+       var new_entry : queue_entry = new;
+
+       var exp_resp1 : expected_resp = new;
+       var exp_resp2 : expected_resp = new;
+       var exp_resp3 : expected_resp = new;
+       var exp_resp4 : expected_resp = new;
+
+       //exp_resp.val  = ins.get_exp_data(ins);
+       exp_resp1.key_port = ins1.port;
+       exp_resp2.key_port = ins2.port;
+       exp_resp3.key_port = ins3.port;
+       exp_resp4.key_port = ins4.port;
+
+       new_entry.size = 4;
+       new_entry.entry.add(exp_resp1);
+       new_entry.entry.add(exp_resp2);
+       new_entry.entry.add(exp_resp3);
+       new_entry.entry.add(exp_resp4);
+       scrboard.add_new_entry(scrboard, new_entry);
+   };
+
 
    drive_instruction(ins : instruction_s, i : int) @clk is {
+
+       new_queue_entry(ins);
 
        // display generated command and data
        outf("TEST %s\n", i);
@@ -149,6 +185,8 @@ unit driver_u {
    }; // drive_instruction
 
    drive4_instructions(ins1 : instruction_s, ins2 : instruction_s, ins3 : instruction_s, ins4 : instruction_s, i : int) @clk is {
+
+       new_queue_entry4(ins1, ins2, ins3, ins4);
 
       // display generated command and data
       outf("TEST %s", i);
@@ -233,9 +271,49 @@ unit driver_u {
   };
 
 
+    wait_port1() @clk is {
+        while TRUE {
+            wait @resp1;
+            if (out_resp1_p$ != 0) {
+                scrboard.seen_a_resp(scrboard, 1);
+            };
+        };
+    };
+
+    wait_port2() @clk is {
+        while TRUE {
+            wait @resp2;
+            if (out_resp2_p$ != 0) {
+                scrboard.seen_a_resp(scrboard, 2);
+            };
+        };
+    };
+
+    wait_port3() @clk is {
+        while TRUE {
+            wait @resp3;
+            if (out_resp3_p$ != 0) {
+                scrboard.seen_a_resp(scrboard, 3);
+            };
+        };
+    };
+
+    wait_port4() @clk is {
+        while TRUE {
+            wait @resp4;
+            if (out_resp4_p$ != 0) {
+                scrboard.seen_a_resp(scrboard, 4);
+            };
+        };
+    };
+
+
    drive() @clk is {
 
       drive_reset();
+
+      scrboard.init_scoreboard(scrboard);
+
 
       var i : int = 0;
       var j : int = 0;
@@ -248,8 +326,8 @@ unit driver_u {
 
          drive_instruction(ins, index);
          collect_response(ins);
-         ins.check_response(ins);
-         //scoreboard.check_queue(ins.port);
+         //ins.check_response(ins);
+         //scrboard.seen_a_resp(scrboard, ins.port);
          drive_reset();
          update_instuction_wires(ins);
          ins.check_reset(ins);
@@ -257,8 +335,14 @@ unit driver_u {
 
       }; // for each instruction
 
+      //start wait_port1();
+      //start wait_port2();
+      //start wait_port3();
+      //start wait_port4();
+
 
       //for i from 0 to 1000 {
+      //  scrboard.clean(scrboard);
 
       //  ins1 = instructions_to_drive.pop();
       //  ins2 = instructions_to_drive.pop();
@@ -270,36 +354,27 @@ unit driver_u {
       //  ins3.port = 3;
       //  ins4.port = 4;
 
-      //  scoreboard.add_to_queue(ins1.port);
-      //  scoreboard.add_to_queue(ins2.port);
-      //  scoreboard.add_to_queue(ins3.port);
-      //  scoreboard.add_to_queue(ins4.port);
-
+      //  ins1.cmd_in = ADD;
+      //  ins2.cmd_in = ADD;
+      //  ins3.cmd_in = ADD;
+      //  ins4.cmd_in = ADD;
       //  drive4_instructions(ins1, ins2, ins3, ins4, i);
 
-      //  collect_response(ins1);
-      //  collect_response(ins2);
-      //  collect_response(ins3);
-      //  collect_response(ins4);
+      //  wait cycle;
 
-      //  ins1.check_response(ins1);
-      //  ins2.check_response(ins2);
-      //  ins3.check_response(ins3);
-      //  ins4.check_response(ins4);
+      //  ins1.cmd_in = SHR;
+      //  ins2.cmd_in = SHR;
+      //  ins3.cmd_in = SHR;
+      //  ins4.cmd_in = SHR;
+      //  drive4_instructions(ins1, ins2, ins3, ins4, i);
 
-      //  scoreboard.check_queue(ins1.port);
-      //  scoreboard.check_queue(ins2.port);
-      //  scoreboard.check_queue(ins3.port);
-      //  scoreboard.check_queue(ins4.port);
+      //  wait [10] * cycle;
 
       //  drive_reset();
       //  update_instuction_wires(ins1);
       //  ins1.check_reset(ins1);
-      //  //ins2.check_reset(ins2);
-      //  //ins3.check_reset(ins3);
-      //  //ins4.check_reset(ins4);
-      //  wait cycle;
 
+      //  wait cycle;
       //};
 
       wait [10] * cycle;

@@ -10,16 +10,17 @@
 <'
 
 extend instruction_s {
-    keep cmd_in in [ADD,SUB,SHL,SHR, INV, INV1];
+    keep cmd_in in [ADD,SUB,SHL,SHR, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11];
     //keep cmd_in in [ADD, SUB];
     //keep cmd_in in [INV, INV1];
     //keep soft cmd_in == ADD;
-    keep din1 < 4294967296;
-    //keep din2 > 0 && din2 < 4294967211;
+    //keep din1 < 10;
+    keep din1 >= 0 && din1 < 4294967211;
+    keep din2 >= 0 && din2 < 4294967211;
     //keep din2 == 0;
-    keep din2 < 4294967296;
-    //keep port > 1 && port < 4;
-    keep port == 4;
+    //keep din2 < 10;
+    keep port > 0 && port < 5;
+    //keep port == 4;
 
     when ADD'cmd_in instruction_s {
 
