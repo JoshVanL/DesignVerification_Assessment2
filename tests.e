@@ -6,14 +6,17 @@
 
    0001 - Turn port 4 to working.
    0010 - Turn overflow out 2 working.
+   Other two are to make the overflow and shift / 0?
 
 <'
 
 extend instruction_s {
-    keep cmd_in in [ADD,SUB,SHL,SHR, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11];
+    //keep cmd_in in [ADD,SUB,SHL,SHR, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11];
+    keep cmd_in in [ADD];
 
     keep din1 >= 0 && din1 < 4294967211;
-    keep din2 >= 0 && din2 < 4294967211;
+    //keep din2 >= 0 && din2 < 4294967211;
+    keep din2 == 4294967295;
 
     keep port >= 1 && port <= 4;
 
@@ -24,11 +27,11 @@ extend instruction_s {
         20: [32..4294967296];
     };
 
-    keep soft din2 == select {
-        10: [0];
-        70: [0..32];
-        20: [32..4294967296];
-    };
+    //keep soft din2 == select {
+    //    10: [0];
+    //    70: [0..32];
+    //    20: [32..4294967296];
+    //};
 
 }; // extend instruction_s
 

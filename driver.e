@@ -513,70 +513,70 @@ unit driver_u {
 
       }; // for each instruction
 
-      for each (ins) in instructions_to_drive_parallel2 do {
-        drive2_instructions(ins, i);
-        collect_response_parallel2(ins);
+      //for each (ins) in instructions_to_drive_parallel2 do {
+      //  drive2_instructions(ins, i);
+      //  collect_response_parallel2(ins);
 
-        var ins1 : instruction_s = new;
-        ins1.cmd_in = ins.cmd_in1;
-        ins1.port = ins.port_1;
-        ins1.din1 = ins.din1_1;
-        ins1.din2 = ins.din1_2;
-        ins1.resp = ins.out_resp1_p;
-        ins1.dout = ins.out_data1_p;
-        ins1.check_response(ins1);
+      //  var ins1 : instruction_s = new;
+      //  ins1.cmd_in = ins.cmd_in1;
+      //  ins1.port = ins.port_1;
+      //  ins1.din1 = ins.din1_1;
+      //  ins1.din2 = ins.din1_2;
+      //  ins1.resp = ins.out_resp1_p;
+      //  ins1.dout = ins.out_data1_p;
+      //  ins1.check_response(ins1);
 
-        var ins2 : instruction_s = new;
-        ins1.cmd_in = ins.cmd_in2;
-        ins2.port = ins.port_2;
-        ins2.din1 = ins.din2_1;
-        ins2.din2 = ins.din2_2;
-        ins2.resp = ins.out_resp2_p;
-        ins2.dout = ins.out_data2_p;
-        ins2.check_response(ins2);
+      //  var ins2 : instruction_s = new;
+      //  ins1.cmd_in = ins.cmd_in2;
+      //  ins2.port = ins.port_2;
+      //  ins2.din1 = ins.din2_1;
+      //  ins2.din2 = ins.din2_2;
+      //  ins2.resp = ins.out_resp2_p;
+      //  ins2.dout = ins.out_data2_p;
+      //  ins2.check_response(ins2);
 
-        drive_reset();
-        wait cycle;
-      };
+      //  drive_reset();
+      //  wait cycle;
+      //};
 
-      start wait_port1();
-      start wait_port2();
-      start wait_port3();
-      start wait_port4();
+      //start wait_port1();
+      //start wait_port2();
+      //start wait_port3();
+      //start wait_port4();
 
-      var ins4 : instruction_parallel4_s;
+      //var ins4 : instruction_parallel4_s;
 
-      for i from 0 to (instructions_to_drive_parallel4.size() / 2) do {
-        scrboard.clean(scrboard);
+      //for i from 0 to (instructions_to_drive_parallel4.size() / 2) do {
+      //  scrboard.clean(scrboard);
 
-        ins4 = instructions_to_drive_parallel4.pop();
+      //  ins4 = instructions_to_drive_parallel4.pop();
 
-        ins4.cmd_in2 = ins4.cmd_in1;
-        ins4.cmd_in3 = ins4.cmd_in1;
-        ins4.cmd_in4 = ins4.cmd_in1;
+      //  ins4.cmd_in2 = ins4.cmd_in1;
+      //  ins4.cmd_in3 = ins4.cmd_in1;
+      //  ins4.cmd_in4 = ins4.cmd_in1;
 
-        drive4_instructions(ins4, i);
-        collect_input_parallel4(ins4);
+      //  drive4_instructions(ins4, i);
+      //  collect_input_parallel4(ins4);
 
-        wait cycle;
+      //  wait cycle;
 
-        ins4 = instructions_to_drive_parallel4.pop();
+      //  ins4 = instructions_to_drive_parallel4.pop();
 
-        ins4.cmd_in2 = ins4.cmd_in1;
-        ins4.cmd_in3 = ins4.cmd_in1;
-        ins4.cmd_in4 = ins4.cmd_in1;
+      //  ins4.cmd_in2 = ins4.cmd_in1;
+      //  ins4.cmd_in3 = ins4.cmd_in1;
+      //  ins4.cmd_in4 = ins4.cmd_in1;
 
-        drive4_instructions(ins4, i);
-        collect_input_parallel4(ins4);
+      //  drive4_instructions(ins4, i);
+      //  collect_input_parallel4(ins4);
 
-        wait [10] * cycle;
+      //  wait [10] * cycle;
 
-        drive_reset();
-        //update_instuction_wires(ins1);
-        //ins1.check_reset(ins1);
+      //  drive_reset();
+      //  //update_instuction_wires(ins1);
+      //  //ins1.check_reset(ins1);
 
-        wait [5]*cycle;
-      };
+      //  wait [5]*cycle;
+      //};
 
       wait [10] * cycle;
       stop_run();
