@@ -80,6 +80,58 @@ struct instruction_s {
 
 }; // struct instruction_s
 
+struct instruction_parallel2_s {
+
+    %cmd_in1 : opcode_t;
+    %cmd_in2 : opcode_t;
+
+    %din1_1  : uint (bits:32);
+    %din2_1  : uint (bits:32);
+    %din1_2  : uint (bits:32);
+    %din2_2  : uint (bits:32);
+
+    %port_1 : uint (bits:3);
+    %port_2 : uint (bits:3);
+
+    out_resp1_p : uint (bits:2);
+    out_resp2_p : uint (bits:2);
+
+    out_data1_p : uint (bits:32);
+    out_data2_p : uint (bits:32);
+
+}; // struct instruction__parallel4_s
+
+
+struct instruction_parallel4_s {
+
+    %cmd_in1 : opcode_t;
+    %cmd_in2 : opcode_t;
+    %cmd_in3 : opcode_t;
+    %cmd_in4 : opcode_t;
+
+    %din1_1   : uint (bits:32);
+    %din2_1   : uint (bits:32);
+
+    %din1_2   : uint (bits:32);
+    %din2_2   : uint (bits:32);
+
+    %din1_3   : uint (bits:32);
+    %din2_3   : uint (bits:32);
+
+    %din1_4   : uint (bits:32);
+    %din2_4   : uint (bits:32);
+
+    out_resp1_p : uint (bits:2);
+    out_resp2_p : uint (bits:2);
+    out_resp3_p : uint (bits:2);
+    out_resp4_p : uint (bits:2);
+
+    out_data1_p : uint (bits:32);
+    out_data2_p : uint (bits:32);
+    out_data3_p : uint (bits:32);
+    out_data4_p : uint (bits:32);
+
+}; // struct instruction__parallel4_s
 
 
 extend instruction_s {
@@ -135,7 +187,7 @@ extend instruction_s {
         } else if (ins.cmd_in in [INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]) {
 
             check that ins.resp == 02 else
-                dut_error(appendf("[R==>port %u - invalid responce code.<==r]\n \
+                dut_error(appendf("[R==>port %u - invalid responce code.<==R]\n \
                             expected 02,\n \
                             received %u,\n",
                             ins.port, ins.resp));

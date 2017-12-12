@@ -49,10 +49,6 @@ unit scoreboard_u {
                                Bad priority, FIFO?\n",
                                port));
             outf("Current entry contains: \n");
-            //for each (ent) in scr.queue.key(scr.q_head).entry {
-            //    outf("%d,", ent.port);
-            //};
-            //outf("\n");
 
         } else {
             remove_expected_res(scr, port);
