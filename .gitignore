@@ -3,3 +3,4 @@
 !*.e
 !*.v
 !/report/*.tex
+!testResults

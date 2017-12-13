@@ -1,13 +1,12 @@
 
    scoreboard.e file
    -----------------
-   This file provides a scoreboard to check for proper priority and data integrity.
+   This file provides a scoreboard to check for proper priority.
 
 <'
 
 struct expected_resp {
     port : uint(bits:3);
-    //val      : uint(bits:32);
 };
 
 struct queue_entry {

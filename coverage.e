@@ -58,24 +58,24 @@ extend instruction_parallel2_s {
    cover port_cmd_complete is {
       item cmd_in1 using per_instance, ignore = ( cmd_in1 in [NOP, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]);
       item cmd_in2 using per_instance, ignore = ( cmd_in2 in [NOP, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]);
-      item port_1 using per_instance, ignore = (port_1 in [0, 5..7]);
-      item port_2 using per_instance, ignore = (port_2 in [0, 5..7]);
+      item port_1 using per_instance, ignore = (port_1 in [0, 4..7]);
+      item port_2 using per_instance, ignore = (port_2 in [0, 1, 5..7]);
       cross cmd_in1, cmd_in2, port_1, port_2;
    };
 
    cover resp_port_complete is {
       item out_resp1_p using per_instance, ignore = (out_resp1_p == 3);
       item out_resp2_p using per_instance, ignore = (out_resp2_p == 3);
-      item port_1 using per_instance, ignore = (port_1 in [0, 5..7]);
-      item port_2 using per_instance, ignore = (port_2 in [0, 5..7]);
+      item port_1 using per_instance, ignore = (port_1 in [0, 4..7]);
+      item port_2 using per_instance, ignore = (port_2 in [0, 1, 5..7]);
       cross out_resp1_p, out_resp2_p, port_1, port_2;
    };
 
    cover port_resp_cmd_complete is {
       item out_resp1_p using per_instance, ignore = (out_resp1_p == 3);
       item out_resp2_p using per_instance, ignore = (out_resp2_p == 3);
-      item port_1 using per_instance, ignore = (port_1 in [0, 5..7]);
-      item port_2 using per_instance, ignore = (port_2 in [0, 5..7]);
+      item port_1 using per_instance, ignore = (port_1 in [0, 4..7]);
+      item port_2 using per_instance, ignore = (port_2 in [0, 1, 5..7]);
       item cmd_in1 using per_instance, ignore = ( cmd_in1 in [NOP, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]);
       item cmd_in2 using per_instance, ignore = ( cmd_in2 in [NOP, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11]);
       cross out_resp1_p, out_resp2_p, port_1, port_2, cmd_in1, cmd_in2;
@@ -122,7 +122,7 @@ extend driver_u {
    };
 
 
-   collect_input_parallel4(ins : instruction_parallel4_s) @clk is also {
+   collect_response_parallel4(ins : instruction_parallel4_s) @clk is also {
 
       emit ins.instruction_complete;
 

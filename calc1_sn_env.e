@@ -13,9 +13,6 @@ import instruction;       //  pull in instruction data structure definitions
 import driver;            //  pull in driver definitions
 import coverage;          //  pull in coverage metric and collection events
 import tests;      //  pull in current test data
-//import sub_tests;      //  pull in current test data
-//import LSH_tests;      //  pull in current test data
-//import RSH_tests;      //  pull in current test data
 
 
 extend sys {
