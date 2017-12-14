@@ -79,12 +79,12 @@ unit driver_u {
    drive_reset() @clk is {
       var i : int;
 
-      for { i=0; i<=8; i+=1 } do {
+      //for { i=0; i<=8; i+=1 } do {
 
          reset_p$ = 1111111;
          wait cycle;
 
-      }; // for
+      //}; // for
 
       reset_p$ = 0000000;
 

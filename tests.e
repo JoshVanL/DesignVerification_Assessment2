@@ -11,7 +11,6 @@
 
 extend instruction_s {
     keep cmd_in in [ADD,SUB,SHL,SHR, INV1, INV2, INV3, INV4, INV5, INV6, INV7, INV8, INV9, INV10, INV11];
-    //keep cmd_in in [ADD];
 
     keep din1 >= 0 && din1 < 4294967211;
     keep din2 >= 0 && din2 < 4294967211;
