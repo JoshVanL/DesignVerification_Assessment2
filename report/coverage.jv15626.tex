@@ -1,0 +1,53 @@
+\documentclass[a4paper]{article}
+    \title{\vspace{-0.7em}COMS31700: Design Verification - Calculator Design; Coverage Analysis\vspace{-0.7em}}
+    \author{Joshua Van Leeuwen - jv15626 - 23305}
+\date{}
+
+\usepackage{titlesec}
+\usepackage[margin=0.5in]{geometry}
+\geometry{top=10mm, bottom=20mm}
+
+
+\usepackage{titling}
+\usepackage{array}
+\usepackage{listings}
+
+\setlength{\droptitle}{-5em}
+
+\begin{document}
+\vspace{-10em}
+\maketitle
+
+\vspace{-5.1em}
+\subsection*{Code coverage}
+In order to determine whether all branches of the code have been exhausted during testing, code coverage is used.
+
+
+
+\subsection*{Collecting Functional Coverage}
+In order to ensure that the DUV has been tested thoroughly, functional coverage
+is used in conjunction with code coverage to determine all value based events
+have been met - not only all code has been executed.
+
+Collecting functional coverage is split into three main blocks that correspond
+to the 3 structure types used to test the DUV - serial, parallel of 2 and
+parallel of 4 operations. Cross products of the structure fields are used to
+test the functional coverage of the tests, ensuring all logical combinations of
+inputs have been exhausted. These are the input ports, commands and responses.
+Each are cross product with each other as pairs and together. 4 operations in
+parallel does not test for port numbers since all 4 ports are used during each
+test.
+
+Invalid commands are ignored from all coverage except for crossed with ports
+during serial since they do not respond with other responses so only need to
+check that they are run on every port at least once. No operation is ignored on
+all coverage. Response
+
+When responses are collected after driving tests, coverage data is also
+collected.
+
+
+
+
+
+\end{document}
