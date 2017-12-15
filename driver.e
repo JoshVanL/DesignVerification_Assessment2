@@ -91,8 +91,8 @@ unit driver_u {
    }; // drive_reset
 
    new_queue_entry(ins : instruction_s) is {
-       var new_entry : queue_entry = new;
-       var exp_resp : expected_resp_port = new;
+       var new_entry : queue_entry_s = new;
+       var exp_resp : expected_resp_port_s = new;
 
        //exp_resp.val  = ins.get_exp_data(ins);
        exp_resp.port = ins.port;
@@ -103,12 +103,12 @@ unit driver_u {
    };
 
    new_queue_entry4(ins4 : instruction_parallel4_s) is {
-       var new_entry : queue_entry = new;
+       var new_entry : queue_entry_s = new;
 
-       var exp_resp1 : expected_resp_port = new;
-       var exp_resp2 : expected_resp_port = new;
-       var exp_resp3 : expected_resp_port = new;
-       var exp_resp4 : expected_resp_port = new;
+       var exp_resp1 : expected_resp_port_s = new;
+       var exp_resp2 : expected_resp_port_s = new;
+       var exp_resp3 : expected_resp_port_s = new;
+       var exp_resp4 : expected_resp_port_s = new;
 
        exp_resp1.port = 1;
        exp_resp2.port = 2;
@@ -364,7 +364,7 @@ unit driver_u {
         while TRUE {
             wait @resp1;
             if (out_resp1_p$ != 0) {
-                scrboard.seen_a_resp(scrboard, 1);
+                scrboard.seen_a_port(scrboard, 1);
             };
         };
     };
@@ -373,7 +373,7 @@ unit driver_u {
         while TRUE {
             wait @resp2;
             if (out_resp2_p$ != 0) {
-                scrboard.seen_a_resp(scrboard, 2);
+                scrboard.seen_a_port(scrboard, 2);
             };
         };
     };
@@ -382,7 +382,7 @@ unit driver_u {
         while TRUE {
             wait @resp3;
             if (out_resp3_p$ != 0) {
-                scrboard.seen_a_resp(scrboard, 3);
+                scrboard.seen_a_port(scrboard, 3);
             };
         };
     };
@@ -391,7 +391,7 @@ unit driver_u {
         while TRUE {
             wait @resp4;
             if (out_resp4_p$ != 0) {
-                scrboard.seen_a_resp(scrboard, 4);
+                scrboard.seen_a_port(scrboard, 4);
             };
         };
     };
@@ -401,7 +401,7 @@ unit driver_u {
 
       drive_reset();
 
-      scrboard.init_scoreboard(scrboard);
+      scrboard.initialise_scoreboard(scrboard);
 
 
 
@@ -499,7 +499,7 @@ unit driver_u {
       var ins4 : instruction_parallel4_s;
 
       for i from 0 to (instructions_to_drive_parallel4.size() / 50) do {
-        scrboard.clean(scrboard);
+        scrboard.initialise_scoreboard(scrboard);
 
         ins4 = instructions_to_drive_parallel4.pop();
 
