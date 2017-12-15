@@ -92,23 +92,23 @@ unit driver_u {
 
    new_queue_entry(ins : instruction_s) is {
        var new_entry : queue_entry = new;
-       var exp_resp : expected_resp = new;
+       var exp_resp : expected_resp_port = new;
 
        //exp_resp.val  = ins.get_exp_data(ins);
        exp_resp.port = ins.port;
 
        new_entry.size = 1;
-       new_entry.entry.add(exp_resp);
+       new_entry.port_wave.add(exp_resp);
        scrboard.add_new_entry(scrboard, new_entry);
    };
 
    new_queue_entry4(ins4 : instruction_parallel4_s) is {
        var new_entry : queue_entry = new;
 
-       var exp_resp1 : expected_resp = new;
-       var exp_resp2 : expected_resp = new;
-       var exp_resp3 : expected_resp = new;
-       var exp_resp4 : expected_resp = new;
+       var exp_resp1 : expected_resp_port = new;
+       var exp_resp2 : expected_resp_port = new;
+       var exp_resp3 : expected_resp_port = new;
+       var exp_resp4 : expected_resp_port = new;
 
        exp_resp1.port = 1;
        exp_resp2.port = 2;
@@ -116,10 +116,10 @@ unit driver_u {
        exp_resp4.port = 4;
 
        new_entry.size = 4;
-       new_entry.entry.add(exp_resp1);
-       new_entry.entry.add(exp_resp2);
-       new_entry.entry.add(exp_resp3);
-       new_entry.entry.add(exp_resp4);
+       new_entry.port_wave.add(exp_resp1);
+       new_entry.port_wave.add(exp_resp2);
+       new_entry.port_wave.add(exp_resp3);
+       new_entry.port_wave.add(exp_resp4);
        scrboard.add_new_entry(scrboard, new_entry);
    };
 
@@ -426,15 +426,15 @@ unit driver_u {
         ins1.cmd_in = ins.cmd_in1;
         ins1.port = ins.port_1;
         ins1.din1 = ins.din1_1;
-        ins1.din2 = ins.din1_2;
+        ins1.din2 = ins.din2_1;
         ins1.resp = ins.out_resp1_p;
         ins1.dout = ins.out_data1_p;
         ins1.check_response(ins1);
 
         var ins2 : instruction_s = new;
-        ins1.cmd_in = ins.cmd_in2;
+        ins2.cmd_in = ins.cmd_in2;
         ins2.port = ins.port_2;
-        ins2.din1 = ins.din2_1;
+        ins2.din1 = ins.din1_2;
         ins2.din2 = ins.din2_2;
         ins2.resp = ins.out_resp2_p;
         ins2.dout = ins.out_data2_p;

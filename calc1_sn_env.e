@@ -1,5 +1,5 @@
 
-   Sample calc1_sn_env.e file
+   calc1_sn_env.e file
    --------------------------
    This file provides the basic structure for the calc1
    testbench environment.

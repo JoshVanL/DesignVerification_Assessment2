@@ -200,22 +200,34 @@ extend instruction_s {
                             ins.dout,ins.dout));
 
         } else if (ins.cmd_in == SHL) {
+            var res     : int (bits:32);
+            if (ins.din2 > 31) {
+                res = 0;
+            } else {
+                res = ins.din1 << ins.din2;
+            };
 
             check that ins.resp == 01 else
                 dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
                             expected 01,\n \
                             received %u,\n",
                             ins.port, ins.resp));
-            check that ins.dout == (ins.din1 << ins.din2) else
+            check that ins.dout == (res) else
                 dut_error(appendf("[R==>Port 1 invalid output.<==R]\n \
                             Instruction %s %u %u,\n \
                             expected %032.32b \t %u,\n \
                             received %032.32b \t %u.\n",
                             ins.cmd_in, ins.din1, ins.din2,
-                            (ins.din1 << ins.din2), (ins.din1 << ins.din2),
+                            (res), (res),
                             ins.dout,ins.dout));
 
         } else if (ins.cmd_in == SHR) {
+            var res     : int (bits:32);
+            if (ins.din2 > 31) {
+                res = 0;
+            } else {
+                res = ins.din1 >> ins.din2;
+            };
 
             check that ins.resp == 01 else
                 dut_error(appendf("[R==>Port %u - invalid responce code.<==R]\n \
@@ -228,7 +240,7 @@ extend instruction_s {
                             expected %032.32b \t %u,\n \
                             received %032.32b \t %u.\n",
                             ins.cmd_in, ins.din1, ins.din2,
-                            (ins.din1 >> ins.din2), (ins.din1 >> ins.din2),
+                            (res), (res),
                             ins.dout,ins.dout));
 
         };

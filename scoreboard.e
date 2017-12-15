@@ -5,7 +5,7 @@
 
 <'
 
-struct expected_resp {
+struct expected_resp_port {
     port : uint(bits:3);
 };
 
@@ -13,7 +13,7 @@ struct queue_entry {
     qIndex  : int;
     size : int;
 
-    entry : list(key: port) of expected_resp;
+    port_wave : list(key: port) of expected_resp_port;
 };
 
 unit scoreboard_u {
@@ -32,7 +32,7 @@ unit scoreboard_u {
     remove_expected_res(scr: scoreboard_u, port: uint(bits:3)) is {
         var q_head_entry : queue_entry = scr.queue.key(q_head);
 
-        q_head_entry.entry.delete(q_head_entry.entry.key_index(port));
+        q_head_entry.port_wave.delete(q_head_entry.port_wave.key_index(port));
         q_head_entry.size -= 1;
         if (q_head_entry.size == 0) {
             scr.queue.delete(scr.queue.key_index(q_head));
@@ -43,7 +43,7 @@ unit scoreboard_u {
     seen_a_resp(scr: scoreboard_u, port: uint(bits:3)) is {
         var q_head_entry : queue_entry = scr.queue.key(q_head);
 
-        if (!q_head_entry.entry.key_exists(port)) {
+        if (!q_head_entry.port_wave.key_exists(port)) {
             dut_error(appendf("[R==>SCOREBOARD: Unexpected port response %u.<==R]\n \
                                Bad priority, FIFO?\n",
                                port));
